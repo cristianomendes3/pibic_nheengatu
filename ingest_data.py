@@ -2,10 +2,17 @@ import pandas as pd
 from datasets import Dataset
 import os
 import sys
+import unicodedata
 
 # Configuração dos caminhos (Paths)
 ARQUIVO_ENTRADA = "dados_iniciais_nheengatu.xlsx"
 ARQUIVO_SAIDA = "dataset_nheengatu_raw"
+
+def normalize_to_nfc(text):
+  """Função auxiliar para garantir que o texto esteja em NFC."""
+  if isinstance(text, str): # Verifica se o dado é uma string
+    return unicodedata.normalize('NFC', text)
+  return text
 
 def ingest_data():
   """
@@ -33,14 +40,19 @@ def ingest_data():
     print("Ajuste o cabeçalho do Excel e tente novamente.")
     sys.exit(1)
 
-  print(f"[INFO] Colunas validadas. Total de registros: {len(df)}")
+  #4. Normalização Unicode NFC
+  print("[INFO] Aplicando normalização Unicode NFC...")
+  df['Palavra'] = df['Palavra'].apply(normalize_to_nfc)
+  df['Significado'] = df['Significado'].apply(normalize_to_nfc)
+
+  print(f"[INFO] Dados normalizados. Total de registros: {len(df)}")
 
   # Exibir uma amostra para garantir que não há caracteres estranhos (encoding)
   print("\n--- Amostra dos Dados ---")
   print(df.head())
   print("-------------------------\n")
 
-  #4. Conversão para o formato Hugging Face Dataset
+  #5. Conversão para o formato Hugging Face Dataset
   print("[INFO] Convertendo para o formato Hugging Face Dataset...")
   try:
     hf_dataset = Dataset.from_pandas(df)
