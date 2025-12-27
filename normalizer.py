@@ -41,7 +41,7 @@ def clean_text_nheengatu(text):
 
 # Bloco de teste rápido (só roda se você executar o arquivo diretamente)
 if __name__ == "__main__":
-    exemplos =
+    exemplos = []
     
     print("--- Teste de Normalização ---")
     for original in exemplos:
