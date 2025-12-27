@@ -35,19 +35,15 @@ def processar_pipeline(df, tokenizer):
     palavra = str(row['Palavra'])
     significado = str(row['Significado'])
 
-    # 1. Tratamento de Variantes
-    # Se houver vírgula (ex: "Cuára, Kuara"), pega só a primeira parte
-    #palavra_principal = palavra.split(',').split('/').strip()
-
-    # 2. Normalização
+    # 1. Normalização
     # Aplica lowercase, remove pontuação extra, normaliza Unicode (NFC)
     palavra_norm = clean_text_nheengatu(palavra)
 
-    # 3. Tokenização
+    # 2. Tokenização
     tokens = tokenizer.tokenize(palavra_norm)
     ids = tokenizer.convert_tokens_to_ids(tokens)
 
-    # 4. Análise de Qualidade
+    # 3. Análise de Qualidade
     # Verifica se o token [UNK] (ID 100 ou similar) apareceu
     tem_unk = tokenizer.unk_token in tokens
     
